@@ -303,6 +303,39 @@
   .mobile-cta .btn{width:100%}
   @media (max-width:760px){.mobile-cta{display:block} footer.site{padding-bottom:96px}}
 
+  /* booking dialog */
+  dialog.book{
+    margin:auto;border:1px solid var(--line);border-radius:22px;padding:0;
+    background:linear-gradient(180deg,#141211,#0c0b0a);color:var(--ink);
+    width:min(440px,calc(100% - 28px));max-width:none;
+    max-height:calc(100% - 32px);overflow:auto;
+    box-shadow:0 40px 120px rgba(0,0,0,.65);
+  }
+  dialog.book::backdrop{background:rgba(5,4,3,.74);backdrop-filter:blur(6px)}
+  .book-in{padding:28px 24px 22px;position:relative}
+  .book-x{
+    position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;
+    border:1px solid var(--line);background:transparent;color:var(--muted);
+    font-size:17px;line-height:1;cursor:pointer;transition:.25s;
+  }
+  .book-x:hover{color:var(--ink);border-color:var(--gold)}
+  .book-kicker{font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+  .book-title{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:2rem;letter-spacing:.04em;line-height:1;margin:10px 0 8px}
+  .book-sub{color:var(--muted);font-size:.84rem;margin-bottom:18px}
+  .book-opt{
+    display:flex;align-items:center;gap:13px;padding:14px 15px;
+    border:1px solid var(--line);border-radius:14px;margin-bottom:9px;transition:.25s;
+  }
+  .book-opt:hover{border-color:var(--gold);background:rgba(216,164,95,.07)}
+  .book-opt .ico{
+    width:38px;height:38px;flex:0 0 38px;border-radius:50%;display:grid;place-items:center;
+    background:var(--gold-dim);color:var(--gold);font-size:.95rem;
+  }
+  .book-opt b{display:block;font-weight:500;font-size:.94rem;line-height:1.3}
+  .book-opt em{display:block;font-style:normal;color:var(--muted);font-size:.76rem}
+  .book-note{color:var(--muted);font-size:.73rem;line-height:1.5;margin-top:14px}
+  @media (max-width:420px){.book-in{padding:26px 18px 18px}.book-title{font-size:1.8rem}}
+
   /* reveal (only when JS is on) */
   .js .rv{opacity:0;transform:translateY(26px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
   .js .rv.in{opacity:1;transform:none}
@@ -341,7 +374,7 @@
       Кальяны на Геометрии, коктейли, танцпол и караоке по пятницам.
     </p>
     <div class="hero-actions">
-      <a class="btn btn-gold" href="tel:+79605507566">Забронировать стол</a>
+      <a class="btn btn-gold" href="tel:+79605507566" data-book>Забронировать стол</a>
       <a class="btn btn-ghost" href="https://yandex.ru/maps/org/16541120240/" target="_blank" rel="noopener">Как добраться</a>
     </div>
     <div class="hero-meta">
@@ -517,8 +550,26 @@
   </div>
 </footer>
 
+<dialog class="book" id="book" aria-labelledby="book-title">
+  <div class="book-in">
+    <button class="book-x" type="button" data-close aria-label="Закрыть">&#215;</button>
+    <div class="book-kicker">Бронь</div>
+    <h3 class="book-title" id="book-title">Стол на вечер</h3>
+    <p class="book-sub">Выберите, как удобнее связаться. Бронь подтвердит администратор.</p>
+    <a class="book-opt" href="tel:+79605507566">
+      <span class="ico" aria-hidden="true">&#9742;</span>
+      <span><b>Позвонить</b><em>+7 960 550-75-66</em></span>
+    </a>
+    <a class="book-opt" href="https://vk.me/vydox_32" target="_blank" rel="noopener">
+      <span class="ico" aria-hidden="true">&#9993;</span>
+      <span><b>Написать во ВКонтакте</b><em>Сообщения сообщества</em></span>
+    </a>
+    <p class="book-note">Если не дозвонились, напишите в сообщения: там отвечают быстрее.</p>
+  </div>
+</dialog>
+
 <div class="mobile-cta">
-  <a class="btn btn-gold" href="tel:+79605507566">Забронировать стол</a>
+  <a class="btn btn-gold" href="tel:+79605507566" data-book>Забронировать стол</a>
 </div>
 
 <script>
@@ -534,6 +585,18 @@
     el.style.transitionDelay = (i % 4) * 70 + 'ms';
     io.observe(el);
   });
+
+  const book = document.getElementById('book');
+  if (book && typeof book.showModal === 'function') {
+    document.querySelectorAll('[data-book]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        book.showModal();
+      });
+    });
+    book.querySelector('[data-close]').addEventListener('click', () => book.close());
+    book.addEventListener('click', (e) => { if (e.target === book) book.close(); });
+  }
 </script>
 </body>
 </html>
